@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_cook/core/constants/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_colors.dart' as app_colors;
 
@@ -11,56 +12,12 @@ class AppTheme {
   AppTheme._();
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: app_colors.lightBackgroundColor,
-    fontFamily: 'Inter',
-    cardColor: app_colors.lightCardColor,
-    primaryColor: app_colors.appPrimaryColor,
-    bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: app_colors.lightBottomSheetColor),
-    appBarTheme: AppBarTheme(
-      color: app_colors.lightBackgroundColor,
-      foregroundColor: Colors.black,
-      systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: app_colors.lightBackgroundColor,
-      ),
-      toolbarTextStyle: const TextStyle(
-        color: app_colors.black,
-      ),
-      titleSpacing: 0,
-      iconTheme: const IconThemeData(
-        color: app_colors.appPrimaryColor,
-      ),
-    ),
-    colorScheme: ColorScheme.light(
-        primary: app_colors.appPrimaryColor,
-        onPrimary: app_colors.white,
-        primaryContainer: Colors.white38,
-        secondary: app_colors.secondaryGoldColor,
-        surface: app_colors.inputColorLight,
-        onBackground: app_colors.black,
-        onSecondary: Colors.blueGrey),
-    cardTheme: const CardTheme(
-      color: app_colors.lightCardColor,
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: app_colors.lightCardColor,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black),
-    iconTheme: const IconThemeData(
-      color: app_colors.darkGrey,
-    ),
-    textTheme: const TextTheme(
-      button: TextStyle(color: Colors.black),
-      headline6: TextStyle(
-        color: Colors.black,
-        // fontSize: 20.0,
-      ),
-      subtitle2: TextStyle(
-        color: Colors.blueGrey,
-        // fontSize: 18.0,
-      ),
-    ),
+    scaffoldBackgroundColor: const Color(0xFFFBFDF9),
+    colorScheme: lightColorScheme,
+    useMaterial3: true,
+    textTheme: textTheme,
   );
+
   static final transparentAppBrTheme = AppBarTheme(
     // color: app_colors.lightBackgroundColor,
     // foregroundColor: Colors.black,
@@ -81,53 +38,15 @@ class AppTheme {
   //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
   static final ThemeData darkTheme = ThemeData(
-    scaffoldBackgroundColor: app_colors.darkBackgroundColor,
+    scaffoldBackgroundColor: const Color(0xFF191C1B),
     cardColor: app_colors.darkCardColor,
     primaryColor: app_colors.appPrimaryColor,
-    bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: app_colors.darkBottomSheetColor),
-    fontFamily: 'Poppins',
-    appBarTheme: AppBarTheme(
-      color: app_colors.darkBackgroundColor,
-      foregroundColor: Colors.white,
-      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: app_colors.darkBackgroundColor,
-      ),
-      iconTheme: const IconThemeData(
-        color: app_colors.appPrimaryColor,
-      ),
-    ),
-    colorScheme: const ColorScheme.light(
-        primary: app_colors.appPrimaryColor,
-        onPrimary: Colors.white,
-        primaryContainer: Color(0xFF141d26),
-        secondary: app_colors.secondaryGoldColor,
-        onSecondary: Colors.white,
-        surface: app_colors.inputColorDark,
-        onBackground: app_colors.white),
+    colorScheme: darkColorScheme,
     cardTheme: const CardTheme(
       color: app_colors.darkCardColor,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: app_colors.darkCardColor,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white),
-    iconTheme: const IconThemeData(
-      color: Colors.white54,
-    ),
-    textTheme: const TextTheme(
-      caption: TextStyle(color: Colors.white),
-      headline6: TextStyle(
-        color: Colors.white,
-        // fontSize: 20.0,
-      ),
-      subtitle2: TextStyle(
-        color: Colors.white70,
-        // fontSize: 18.0,
-      ),
-    ),
+    textTheme: textTheme,
   );
-
   static BoxDecoration cardDecoration = BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -142,7 +61,6 @@ class AppTheme {
       boxShadow: const [
         BoxShadow(color: Colors.black12, offset: Offset(0, 10), blurRadius: 7)
       ]);
-
   static InputDecoration filledTextFieldDecoration = InputDecoration(
     filled: true,
     contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
@@ -344,4 +262,102 @@ class AppTheme {
       color: color,
       borderRadius: const BorderRadius.only(
           topRight: Radius.circular(17), topLeft: Radius.circular(17)));
+
+  static const lightColorScheme = ColorScheme(
+    brightness: Brightness.light,
+    primary: Color(0xFF048969),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF82F8CF),
+    onPrimaryContainer: Color(0xFF002117),
+    secondary: Color(0xFF4C6359),
+    onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFFCEE9DC),
+    onSecondaryContainer: Color(0xFF082018),
+    tertiary: Color(0xFF3F6375),
+    onTertiary: Color(0xFFFFFFFF),
+    tertiaryContainer: Color(0xFFC3E8FE),
+    onTertiaryContainer: Color(0xFF001E2B),
+    error: Color(0xFFBA1A1A),
+    errorContainer: Color(0xFFFFDAD6),
+    onError: Color(0xFFFFFFFF),
+    onErrorContainer: Color(0xFF410002),
+    background: Color(0xFFFBFDF9),
+    onBackground: Color(0xFF191C1B),
+    surface: Color(0xFFFBFDF9),
+    onSurface: Color(0xFF191C1B),
+    surfaceVariant: Color(0xFFDBE5DE),
+    onSurfaceVariant: Color(0xFF404944),
+    outline: Color(0xFF707974),
+    onInverseSurface: Color(0xFFEFF1EE),
+    inverseSurface: Color(0xFF2E312F),
+    inversePrimary: Color(0xFF64DBB4),
+    shadow: Color(0xFF000000),
+    surfaceTint: Color(0xFF006C52),
+    outlineVariant: Color(0xFFBFC9C3),
+    scrim: Color(0xFF000000),
+  );
+
+  static const darkColorScheme = ColorScheme(
+    brightness: Brightness.dark,
+    // primary: Color(0xFF048969),
+    primary: Color(0xFF64DBB4),
+    onPrimary: Color(0xFF003829),
+    primaryContainer: Color(0xFF00513D),
+    onPrimaryContainer: Color(0xFF82F8CF),
+    secondary: Color(0xFFB2CCC0),
+    onSecondary: Color(0xFF1E352C),
+    secondaryContainer: Color(0xFF344C42),
+    onSecondaryContainer: Color(0xFFCEE9DC),
+    tertiary: Color(0xFFA7CCE1),
+    onTertiary: Color(0xFF0B3445),
+    tertiaryContainer: Color(0xFF274B5D),
+    onTertiaryContainer: Color(0xFFC3E8FE),
+    error: Color(0xFFFFB4AB),
+    errorContainer: Color(0xFF93000A),
+    onError: Color(0xFF690005),
+    onErrorContainer: Color(0xFFFFDAD6),
+    background: Color(0xFF191C1B),
+    onBackground: Color(0xFFE1E3E0),
+    surface: Color(0xFF191C1B),
+    onSurface: Color(0xFFE1E3E0),
+    surfaceVariant: Color(0xFF404944),
+    onSurfaceVariant: Color(0xFFBFC9C3),
+    outline: Color(0xFF89938D),
+    onInverseSurface: Color(0xFF191C1B),
+    inverseSurface: Color(0xFFE1E3E0),
+    inversePrimary: Color(0xFF006C52),
+    shadow: Color(0xFF000000),
+    surfaceTint: Color(0xFF64DBB4),
+    outlineVariant: Color(0xFF404944),
+    scrim: Color(0xFF000000),
+  );
+
+  static var textTheme = TextTheme(
+    displayLarge: GoogleFonts.montserrat(
+        fontSize: 98, fontWeight: FontWeight.w300, letterSpacing: -1.5),
+    displayMedium: GoogleFonts.montserrat(
+        fontSize: 61, fontWeight: FontWeight.w300, letterSpacing: -0.5),
+    displaySmall:
+        GoogleFonts.montserrat(fontSize: 49, fontWeight: FontWeight.w400),
+    headlineMedium: GoogleFonts.montserrat(
+        fontSize: 35, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    headlineSmall:
+        GoogleFonts.montserrat(fontSize: 24, fontWeight: FontWeight.w400),
+    titleLarge: GoogleFonts.montserrat(
+        fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: 0.15),
+    titleMedium: GoogleFonts.montserrat(
+        fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15),
+    titleSmall: GoogleFonts.montserrat(
+        fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+    bodyLarge: GoogleFonts.montserrat(
+        fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
+    bodyMedium: GoogleFonts.montserrat(
+        fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    labelLarge: GoogleFonts.montserrat(
+        fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.25),
+    bodySmall: GoogleFonts.montserrat(
+        fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4),
+    labelSmall: GoogleFonts.montserrat(
+        fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+  );
 }

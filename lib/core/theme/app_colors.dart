@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+const secondaryColor = Color(0xFF0E0B0A);
+const Color appPrimaryColor = Color(0xFF18892E);
+
+
+
+
+
+
+
+
 const Color portfoliogradient1 = Color(0xFF92E3A9);
 const Color portfoliogradient2 = Color(0xFFC7B834);
  Color lightBackgroundColor = Colors.white;
@@ -13,7 +23,6 @@ const Color lightCardColor = Colors.white;
 const Color darkGrey = Color(0xFFA4A4A4);
  Color lightGrey = Colors.grey.shade300;
 const Color secondaryGoldColor = Color(0xFFE7AC63);
-const Color appPrimaryColor = Color(0xFF001E45);
 // const Color appPrimaryColor = Color(0xFF7C3626);
 const Color primaryColorLight = Color(0x99F05E5E);
 const Color primaryColorDark = Color(0xFF343434);
@@ -32,7 +41,7 @@ const red = Color(0xFFff0000);
 
 const Color gold = Color(0xFFcfa23c);
 
-const secondaryColor = Color(0xFF0864D7);
+
 const gradient = Color(0xFF0e0ba0);
 const gradient2 = Color(0xFF02156B);
 const textColor = Color(0xFF5f6368);
