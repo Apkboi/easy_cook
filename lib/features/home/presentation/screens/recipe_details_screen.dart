@@ -2,14 +2,18 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/common/widgets/stacked_images_widget.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
-import 'package:easy_cook/core/utils/app_images.dart';
+import 'package:easy_cook/features/home/data/models/recipe_model.dart';
 import 'package:easy_cook/features/home/presentation/components/ingredients_item.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
 class RecipeDetailsScreen extends StatefulWidget {
-  const RecipeDetailsScreen({Key? key}) : super(key: key);
+  const RecipeDetailsScreen(
+      {Key? key, required this.recipe, required this.heroTag})
+      : super(key: key);
+  final RecipeModel recipe;
+  final String heroTag;
 
   @override
   State<RecipeDetailsScreen> createState() => _RecipeDetailsScreenState();
@@ -24,7 +28,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
           style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary),
           onPressed: () {
-            context.router.root.push(const CookingRoute());
+            context.router.root.push(CookingRoute(recipe: widget.recipe));
           },
           child: const Text(
             'Start Cooking',
@@ -67,11 +71,11 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                     )),
               ],
               flexibleSpace: Hero(
-                tag: 'recipe0',
+                tag: widget.heroTag,
                 child: Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage(AppImages.pizza2),
+                          image: NetworkImage(widget.recipe.images.first),
                           fit: BoxFit.cover)),
                 ),
               ),
@@ -136,10 +140,17 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                                           ],
                                         ),
                                       ),
-                                      const Icon(
-                                        FluentIcons.arrow_right_32_regular,
-                                        color: Colors.white,
-                                      )
+                                      TextButton(
+                                          style: TextButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.white),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16),
+                                              shape: const StadiumBorder()),
+                                          onPressed: () {},
+                                          child: const Text('Follow'))
                                     ],
                                   ),
                                 ),
@@ -173,7 +184,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Spaghetti with shrimp sauce',
+                                  widget.recipe.name,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge
@@ -183,7 +194,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Spaghetti with shrimp sauce',
+                                  widget.recipe.categoryName,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleSmall
@@ -227,7 +238,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                             ),
                           ),
                           Text(
-                            '7 items',
+                            '${widget.recipe.ingredients.length} items',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall
@@ -241,14 +252,30 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               ),
               SliverList.builder(
                 // physics: NeverScrollableScrollPhysics(),
-                itemCount: 7,
-                itemBuilder: (context, index) => const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: IngredientsItem(),
+                itemCount: widget.recipe.ingredients.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: IngredientsItem(
+                    ingredient: widget.recipe.ingredients[index],
+                  ),
                 ),
               )
             ]),
       ),
     );
+  }
+}
+
+class _TextScreen extends StatefulWidget {
+  const _TextScreen({Key? key}) : super(key: key);
+
+  @override
+  State<_TextScreen> createState() => _TextScreenState();
+}
+
+class _TextScreenState extends State<_TextScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

@@ -39,7 +39,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         children: [
                           const Expanded(
                               child: CustomSearchBar(
-                                  tittle: 'Search saved recipes')),
+                                  tittle: 'Search saved recipes.json')),
                           const SizedBox(
                             width: 10,
                           ),
@@ -148,7 +148,7 @@ class _TittleBarState extends State<_TittleBar> {
           height: 10,
         ),
         Text(
-          'Your favorite recipes at your fingertip',
+          'Your favorite recipes.json at your fingertip',
           style: Theme.of(context)
               .textTheme
               .titleSmall

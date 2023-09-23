@@ -1,64 +1,70 @@
 import 'package:auto_route/annotations.dart';
+import 'package:easy_cook/common/models/categories.dart';
 import 'package:easy_cook/features/home/presentation/components/recipe_category_switcher.dart';
 import 'package:easy_cook/features/home/presentation/components/recipes_by_categories.dart';
 import 'package:easy_cook/features/home/presentation/components/trending_recipe_widget.dart';
 import 'package:easy_cook/features/home/presentation/components/new_recipes_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final categoriesSwitcherProvider =
+      StateProvider<RecipeCategory?>((ref) => RecipeCategory.all());
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body:  NestedScrollView(
+      body: NestedScrollView(
         body:
-          const RecipesByCategories()
-        , headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-
+            RecipesByCategories(categoriesProvider: categoriesSwitcherProvider),
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
-             const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 60,
                     ),
-                    _TittleBar(),
-                    SizedBox(height: 25,),
+                    const _TittleBar(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+
                     // CustomSearchBar(tittle: 'Search Recipes',),
                     // SizedBox(height: 25,),
-                    NewRecipeWidget(),
-                    SizedBox(height: 25,),
-                    TrendingRecipeWidget(),
-                    SizedBox(
+
+                    const NewRecipeWidget(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const TrendingRecipeWidget(),
+                    const SizedBox(
                       height: 16,
                     ),
-                    RecipeCategorySwitcher(),
-                    SizedBox(
+                    RecipeCategorySwitcher(
+                      switcherProvider: categoriesSwitcherProvider,
+                    ),
+                    const SizedBox(
                       height: 10,
                     ),
-
-
-
-
                   ],
                 ),
               ),
             ),
-
           ];
-      },
-
+        },
       ),
     );
   }
@@ -93,7 +99,10 @@ class _TittleBar extends StatelessWidget {
             ),
           ],
         )),
-        const Text('👳‍',style: TextStyle(fontSize: 40),)
+        const Text(
+          '👳‍',
+          style: TextStyle(fontSize: 40),
+        )
       ],
     );
   }

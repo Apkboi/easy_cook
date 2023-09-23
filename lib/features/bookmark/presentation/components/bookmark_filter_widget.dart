@@ -1,12 +1,14 @@
+
 import 'package:easy_cook/common/widgets/custom_button.dart';
-import 'package:easy_cook/features/bookmark/presentation/components/category_filter_selector.dart';
-import 'package:easy_cook/features/bookmark/presentation/components/cooking_time_duration.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/date_selector_view.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
+
 class BookmarkFilterWidget extends StatefulWidget {
-  const BookmarkFilterWidget({Key? key}) : super(key: key);
+  const BookmarkFilterWidget({Key? key, })
+      : super(key: key);
+  // final StateProvider<List<RecipeFilterModel>> filtersProvider;
 
   @override
   State<BookmarkFilterWidget> createState() => _BookmarkFilterWidgetState();
@@ -15,6 +17,7 @@ class BookmarkFilterWidget extends StatefulWidget {
 class _BookmarkFilterWidgetState extends State<BookmarkFilterWidget> {
   Widget selectedFilterWidget = Container();
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +53,12 @@ class _BookmarkFilterWidgetState extends State<BookmarkFilterWidget> {
     setState(() {
       switch (key) {
         case 'category':
-          selectedFilterWidget = const CategoryFilterSelector();
+          ///TODO: ADD CATEGORY SWITCHER SELECTOR
+          selectedFilterWidget = Container();
           break;
         case 'cooking time':
-          selectedFilterWidget = const CookingTimeDuration();
+        ///TODO: ADD Cooking time  SELECTOR
+          selectedFilterWidget =  Container();
           break;
         case 'date':
           selectedFilterWidget = const DateSelectorView();

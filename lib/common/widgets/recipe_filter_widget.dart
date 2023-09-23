@@ -1,18 +1,34 @@
+import 'package:easy_cook/common/models/categories.dart';
 import 'package:easy_cook/common/widgets/custom_button.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmark_filter_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/category_filter_selector.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/cooking_time_duration.dart';
+import 'package:easy_cook/features/home/presentation/notifiers/recipe_filter_notifier.dart';
+import 'package:easy_cook/features/home/presentation/notifiers/search_duration_filter.dart';
+import 'package:easy_cook/features/home/presentation/notifiers/selected_categories_notifier.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class RecipeFilterWidget extends StatefulWidget {
-  const RecipeFilterWidget({Key? key}) : super(key: key);
+class RecipeFilterWidget extends ConsumerStatefulWidget {
+  const RecipeFilterWidget({
+    Key? key,
+    required this.selectedCategoryProvider,
+    required this.filtersNotifier,
+    required this.durationProvider,
+  }) : super(key: key);
+
+  final StateNotifierProvider<SelectedCategoryNotifier, SelectedCategories>
+      selectedCategoryProvider;
+  final RecipesFilterNotifier filtersNotifier;
+  final StateNotifierProvider<SearchDurationFilter, RangeValues>
+      durationProvider;
 
   @override
-  State<RecipeFilterWidget> createState() => _RecipeFilterWidgetState();
+  ConsumerState<RecipeFilterWidget> createState() => _RecipeFilterWidgetState();
 }
 
-class _RecipeFilterWidgetState extends State<RecipeFilterWidget> {
+class _RecipeFilterWidgetState extends ConsumerState<RecipeFilterWidget> {
   Widget selectedFilterWidget = Container();
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
 
@@ -50,10 +66,16 @@ class _RecipeFilterWidgetState extends State<RecipeFilterWidget> {
     setState(() {
       switch (key) {
         case 'category':
-          selectedFilterWidget = const CategoryFilterSelector();
+          selectedFilterWidget = CategoryFilterSelector(
+            filtersProvider: widget.filtersNotifier,
+            selectedCategoryProvider: widget.selectedCategoryProvider,
+          );
           break;
         case 'cooking time':
-          selectedFilterWidget = const CookingTimeDuration();
+          selectedFilterWidget = CookingTimeDuration(
+            filterNotifier: widget.filtersNotifier,
+            durationProvider: widget.durationProvider,
+          );
           break;
       }
       crossFadeState = CrossFadeState.showSecond;

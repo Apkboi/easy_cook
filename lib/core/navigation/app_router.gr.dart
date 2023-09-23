@@ -17,6 +17,7 @@ import 'package:easy_cook/features/bookmark/presentation/screens/bookmark_tab.da
     as _i2;
 import 'package:easy_cook/features/dashboard/presentation/screens/dashboard_screen.dart'
     as _i4;
+import 'package:easy_cook/features/home/data/models/recipe_model.dart' as _i16;
 import 'package:easy_cook/features/home/presentation/screens/cooking_screen.dart'
     as _i3;
 import 'package:easy_cook/features/home/presentation/screens/home_screen.dart'
@@ -35,6 +36,7 @@ import 'package:easy_cook/features/search/presentation/screens/search_screen.dar
     as _i11;
 import 'package:easy_cook/features/search/presentation/screens/search_tab.dart'
     as _i12;
+import 'package:flutter/material.dart' as _i15;
 
 abstract class $AppRouter extends _i14.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -54,9 +56,13 @@ abstract class $AppRouter extends _i14.RootStackRouter {
       );
     },
     CookingRoute.name: (routeData) {
+      final args = routeData.argsAs<CookingRouteArgs>();
       return _i14.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i3.CookingScreen(),
+        child: _i3.CookingScreen(
+          key: args.key,
+          recipe: args.recipe,
+        ),
       );
     },
     DashBoardRoute.name: (routeData) {
@@ -96,9 +102,14 @@ abstract class $AppRouter extends _i14.RootStackRouter {
       );
     },
     RecipeDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<RecipeDetailsRouteArgs>();
       return _i14.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i10.RecipeDetailsScreen(),
+        child: _i10.RecipeDetailsScreen(
+          key: args.key,
+          recipe: args.recipe,
+          heroTag: args.heroTag,
+        ),
       );
     },
     SearchRoute.name: (routeData) {
@@ -152,16 +163,40 @@ class BookmarkTab extends _i14.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.CookingScreen]
-class CookingRoute extends _i14.PageRouteInfo<void> {
-  const CookingRoute({List<_i14.PageRouteInfo>? children})
-      : super(
+class CookingRoute extends _i14.PageRouteInfo<CookingRouteArgs> {
+  CookingRoute({
+    _i15.Key? key,
+    required _i16.RecipeModel recipe,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
           CookingRoute.name,
+          args: CookingRouteArgs(
+            key: key,
+            recipe: recipe,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'CookingRoute';
 
-  static const _i14.PageInfo<void> page = _i14.PageInfo<void>(name);
+  static const _i14.PageInfo<CookingRouteArgs> page =
+      _i14.PageInfo<CookingRouteArgs>(name);
+}
+
+class CookingRouteArgs {
+  const CookingRouteArgs({
+    this.key,
+    required this.recipe,
+  });
+
+  final _i15.Key? key;
+
+  final _i16.RecipeModel recipe;
+
+  @override
+  String toString() {
+    return 'CookingRouteArgs{key: $key, recipe: $recipe}';
+  }
 }
 
 /// generated route for
@@ -250,16 +285,45 @@ class ProfileTab extends _i14.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.RecipeDetailsScreen]
-class RecipeDetailsRoute extends _i14.PageRouteInfo<void> {
-  const RecipeDetailsRoute({List<_i14.PageRouteInfo>? children})
-      : super(
+class RecipeDetailsRoute extends _i14.PageRouteInfo<RecipeDetailsRouteArgs> {
+  RecipeDetailsRoute({
+    _i15.Key? key,
+    required _i16.RecipeModel recipe,
+    required String heroTag,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
           RecipeDetailsRoute.name,
+          args: RecipeDetailsRouteArgs(
+            key: key,
+            recipe: recipe,
+            heroTag: heroTag,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'RecipeDetailsRoute';
 
-  static const _i14.PageInfo<void> page = _i14.PageInfo<void>(name);
+  static const _i14.PageInfo<RecipeDetailsRouteArgs> page =
+      _i14.PageInfo<RecipeDetailsRouteArgs>(name);
+}
+
+class RecipeDetailsRouteArgs {
+  const RecipeDetailsRouteArgs({
+    this.key,
+    required this.recipe,
+    required this.heroTag,
+  });
+
+  final _i15.Key? key;
+
+  final _i16.RecipeModel recipe;
+
+  final String heroTag;
+
+  @override
+  String toString() {
+    return 'RecipeDetailsRouteArgs{key: $key, recipe: $recipe, heroTag: $heroTag}';
+  }
 }
 
 /// generated route for

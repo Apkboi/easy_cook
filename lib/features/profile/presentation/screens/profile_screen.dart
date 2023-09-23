@@ -2,7 +2,6 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/core/utils/app_images.dart';
-import 'package:easy_cook/features/search/presentation/components/recipe_item.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -158,8 +157,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+
+          /// TODO: ADD RECIPE ITEM
           childrenDelegate: SliverChildBuilderDelegate(
-              (context, index) => const RecipeItem(),
+              (context, index) => Container(),
               childCount: 4),
         ),
       ),

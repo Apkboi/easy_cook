@@ -2,13 +2,16 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
-import 'package:easy_cook/core/utils/app_images.dart';
+import 'package:easy_cook/features/home/data/models/recipe_model.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
 class TrendingRecipeItem extends StatefulWidget {
-  const TrendingRecipeItem({Key? key, required this.index}) : super(key: key);
+  const TrendingRecipeItem(
+      {Key? key, required this.index, required this.recipe})
+      : super(key: key);
   final int index;
+  final RecipeModel recipe;
 
   @override
   State<TrendingRecipeItem> createState() => _TrendingRecipeItemState();
@@ -21,7 +24,7 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
       onTap: () {
         // log(context.router.root.currentPath);
         try {
-          context.router.root.push(const RecipeDetailsRoute());
+          context.router.root.push(RecipeDetailsRoute(recipe: widget.recipe, heroTag: 'recipe${widget.recipe.id}'));
         } on Exception catch (e) {
           log(e.toString());
         }
@@ -29,7 +32,9 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
       child: AspectRatio(
         aspectRatio: 0.7,
         child: Hero(
-          tag: 'recipe${widget.index}',
+          tag: 'recipe${widget.recipe.id}',
+          transitionOnUserGestures: true,
+          key: GlobalKey(),
           createRectTween: (begin, end) {
             return RectTween(
               begin: begin,
@@ -50,8 +55,8 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
                   ],
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                      image: AssetImage(
-                        AppImages.pizza2,
+                      image: NetworkImage(
+                        widget.recipe.images.first,
                       ),
                       fit: BoxFit.cover)),
               child: Padding(
@@ -71,7 +76,7 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
                               padding: EdgeInsets.zero,
                               backgroundColor: Colors.grey.withOpacity(0.4)),
                           onPressed: () {},
-                          child: const Text('Pasta')),
+                          child: Text(widget.recipe.categoryName)),
                     ),
                     const Spacer(),
                     ClipRRect(
@@ -90,7 +95,7 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'Spaghetti with shrimp sauce',
+                                        widget.recipe.name,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall
@@ -113,7 +118,7 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
                                   height: 5,
                                 ),
                                 Text(
-                                  '30 Mins | 1 Serving',
+                                  '${widget.recipe.durationInMinutes} mins | ${widget.recipe.servings} Serving(s)',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall

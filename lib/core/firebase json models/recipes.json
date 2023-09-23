@@ -1,0 +1,15 @@
+{
+     "id" : "Jd",
+ "category_id" : "john@example.com",
+"description" : "john@example.com",
+ "duration_in_minutes" : 1.4,
+ "images" : ["a","ss"],
+ "name" : "john@example.com",
+"published_by" : "john@example.com",
+ "recipe_by" : "john@example.com",
+ "servings" : 1,
+ "tutorial" : "john@example.com",
+  "category_name" : "john@example.com",'
+ "ingredients" : [{"id":"ss","name":"onion","image":"scjls","quantity":"1.3 kg"}]
+
+}

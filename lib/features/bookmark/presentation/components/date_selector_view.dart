@@ -28,34 +28,34 @@ class _DateSelectorViewState extends State<DateSelectorView> {
           height: 10,
         ),
         SfDateRangePicker(
-
-
-
-        minDate: DateTime(2000),
-        maxDate: DateTime(2030),
-        selectionMode: DateRangePickerSelectionMode.extendableRange,
-        view: DateRangePickerView.year,
-        onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
-
-        },
-        monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
-      ),
-        const SizedBox(height: 10,),
-        CustomButton(child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Apply filter'),
-            SizedBox(width: 10,),
-            Icon(FluentIcons.options_20_regular)
-          ],
-        ), onPressed: () {
-
-          context.router.pop(true);
-        }),
+          minDate: DateTime(2000),
+          maxDate: DateTime(2030),
+          selectionMode: DateRangePickerSelectionMode.extendableRange,
+          view: DateRangePickerView.year,
+          onSelectionChanged: (dateRangePickerSelectionChangedArgs) {},
+          monthViewSettings:
+              const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        CustomButton(
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Apply filter'),
+                SizedBox(
+                  width: 10,
+                ),
+                Icon(FluentIcons.options_20_regular)
+              ],
+            ),
+            onPressed: () {
+              context.router.pop(true);
+            }),
         const SizedBox(
           height: 16,
         ),
-
       ],
     );
   }
