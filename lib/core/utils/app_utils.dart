@@ -1,4 +1,86 @@
+import 'dart:ui';
+
+import 'package:easy_cook/common/widgets/custom_button.dart';
+import 'package:easy_cook/common/widgets/custom_outlined_button.dart';
+import 'package:easy_cook/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+
+void showConfirmDialog(BuildContext context,
+    {String? tittle,
+    String? subtitle,
+    String? confirmButtonText,
+    String? cancelButtonText,
+    required VoidCallback? onDismiss,
+    required VoidCallback? onConfirm}) {
+  showDialog(
+    context: context,
+    builder: (context) => BackdropFilter(
+      filter: ImageFilter.blur(sigmaY: 3, sigmaX: 3),
+      child: AlertDialog(
+
+          backgroundColor: Theme.of(context).cardTheme.color,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 20,),
+              Text(
+                tittle ?? 'Are you sure you want to exit ?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                subtitle ?? 'Subtitle here',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: darkGrey, fontSize: 13),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomOutlinedButton(
+                        padding: const EdgeInsets.all(10),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onDismiss!();
+                        },
+                        child: const Text(
+                          'Cancel',
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: CustomButton(
+                        padding: const EdgeInsets.all(10),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onConfirm!();
+                        },
+                        child: const Text(
+                          'Continue',
+                        )),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20,),
+
+            ],
+          )),
+    ),
+  );
+}
 
 class CustomSnackBar {
   final BuildContext context;
@@ -98,7 +180,7 @@ class CustomSnackBar {
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w500,
-          fontFamily: 'Poppins',
+
           color: Colors.white,
         ),
       ),

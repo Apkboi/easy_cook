@@ -1,4 +1,3 @@
-
 import 'package:easy_cook/core/utils/app_utils.dart';
 import 'package:easy_cook/features/home/data/models/step.dart';
 import 'package:easy_cook/features/home/presentation/provider/cooking_timer_provider.dart';
@@ -23,7 +22,7 @@ class _TimingItemState extends ConsumerState<TimingItem> {
 
     return Card(
       shape: RoundedRectangleBorder(
-          side: timer.isRunning && timer.timingFor == widget.timing.timingFor
+          side: timer.timingFor == widget.timing.timingFor
               ? BorderSide(color: Theme.of(context).colorScheme.primary)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8)),
@@ -61,18 +60,18 @@ class _TimingItemState extends ConsumerState<TimingItem> {
                 ],
               ),
             ),
-            (!timer.isRunning)
+            (timer.isRunning && widget.timing.timingFor == timer.timingFor)
                 ? IconButton(
-                    onPressed: () {
-                      _play();
-                    },
-                    icon: Icon(FluentIcons.play_24_filled,
-                        color: Theme.of(context).colorScheme.primary))
-                : IconButton(
                     onPressed: () {
                       _pause();
                     },
                     icon: Icon(FluentIcons.pause_12_regular,
+                        color: Theme.of(context).colorScheme.primary))
+                : IconButton(
+                    onPressed: () {
+                      _play();
+                    },
+                    icon: Icon(FluentIcons.play_24_filled,
                         color: Theme.of(context).colorScheme.primary))
           ],
         ),
@@ -81,12 +80,16 @@ class _TimingItemState extends ConsumerState<TimingItem> {
   }
 
   void _play() {
-    final timer = ref.watch(cookingTimerProvider);
-    if (!timer.isRunning) {
-      ref.watch(cookingTimerProvider.notifier).start(
-          duration: widget.timing.durationInMinutes.round(),
-          timingFor: widget.timing.timingFor);
-      CustomSnackBar.show(context, body: const Text('Its not running'));
+    var canStart = ref.read(cookingTimerProvider.notifier).start(
+        duration: widget.timing.durationInMinutes.round(),
+        timingFor: widget.timing.timingFor);
+
+    if (!canStart) {
+      showConfirmDialog(context, onDismiss: () {}, onConfirm: () {
+        ref.watch(cookingTimerProvider.notifier).reset();
+      },
+          subtitle: 'There is a timer currently running',
+          tittle: "Do you want to stop the current timer ?");
     }
   }
 

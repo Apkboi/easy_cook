@@ -52,7 +52,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // Container(),
                   Text(
                     'Cooking a \nDelicious Food\nEasily.',
@@ -100,13 +99,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     fontWeight: FontWeight.w600),
                           ),
                           onPressed: () {
-                            context.router.push(const DashBoardRoute());
+                            context.router.push(const SignupRoute());
                           })),
                   const SizedBox(
                     height: 16,
                   ),
                   CustomOutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.router.push(const DashBoardRoute());
+                    },
                     outlinedColr: Theme.of(context).colorScheme.primary,
                     foreGroundColor: Colors.white,
                     padding: const EdgeInsets.all(20),

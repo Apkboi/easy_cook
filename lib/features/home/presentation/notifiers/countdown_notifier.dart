@@ -18,9 +18,10 @@ class CountdownNotifier extends StateNotifier<CountdownState> {
 
   Timer? _timer;
 
-  void start({required int duration, required String timingFor}) {
+  bool start({required int duration, required String timingFor}) {
 
-    if (state.duration > 0 && !state.isRunning) {
+    if (state.duration > 0 && !state.isRunning && (timingFor == state.timingFor || state.timingFor == null)) {
+
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         state = CountdownState(
             duration: state.duration - 1,
@@ -32,9 +33,14 @@ class CountdownNotifier extends StateNotifier<CountdownState> {
               duration: 0, isRunning: false, timingFor: timingFor);
         }
       });
+      return true;
+
+
     } else if (state.duration <= 0 && !state.isRunning) {
       state.duration = duration * 60;
-      start(duration: duration, timingFor: timingFor);
+     return start(duration: duration, timingFor: timingFor);
+    }else{
+      return false;
     }
   }
 

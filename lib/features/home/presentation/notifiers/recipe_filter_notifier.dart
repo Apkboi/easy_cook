@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:easy_cook/common/models/recipe_filters_model.dart';
 import 'package:easy_cook/core/constants/firebase/firebase_fields.dart';
+import 'package:easy_cook/core/constants/firebase/firebase_operators.dart';
 import 'package:easy_cook/features/home/presentation/notifiers/search_duration_filter.dart';
 import 'package:easy_cook/features/home/presentation/notifiers/selected_categories_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -34,36 +35,50 @@ class RecipesFilterNotifier extends StateNotifier<RecipeFilters> {
   // ========= Updating the state of the filter  =============
 
   void applyFilter() {
-    var searchQuery = query.isEmpty
+    // var searchQuery = query.isEmpty
+    //     ? []
+    //     : [
+    //         RecipeFilterModel(
+    //             field: FirebaseFields.name,
+    //             value: query,
+    //             operator: 'fieldsContains'),
+    //         // RecipeFilterModel(
+    //         //     field: FirebaseFields.description,
+    //         //     value: query,
+    //         //     operator: 'fieldsContains'),
+    //       ];
+
+    var duration = durationFilter.state == null
         ? []
         : [
             RecipeFilterModel(
-                field: FirebaseFields.name,
-                value: query,
-                operator: 'fieldsContains'),
-            // RecipeFilterModel(
-            //     field: FirebaseFields.description,
-            //     value: query,
-            //     operator: 'fieldsContains'),
+                field: FirebaseFields.duration,
+                value: durationFilter.state?.start,
+                operator: FirebaseOperators.greaterThan),
+            RecipeFilterModel(
+                field: FirebaseFields.duration,
+                value: durationFilter.state?.end,
+                operator: FirebaseOperators.lessThan),
           ];
 
-    var duration = [
-      RecipeFilterModel(
-          field: FirebaseFields.duration,
-          value: durationFilter.state.start,
-          operator: '>'),
-      // RecipeFilterModel(
-      //     field: FirebaseFields.duration,
-      //     value: durationFilter.state.end,
-      //     operator: '<'),
-    ];
-    var categories = List.generate(
-        categoriesNotifier.state.selectedCategories.length,
-        (index) => RecipeFilterModel(
-            field: FirebaseFields.categoryId,
-            value: categoriesNotifier.state.selectedCategories[index].id));
+    log("Applied categories ${categoriesNotifier.state.selectedCategories.length.toString()}");
 
-    state = RecipeFilters([...categories, ...duration, ...searchQuery]);
-    log("Applied filters ${state.filters.length.toString()}");
+    // var categories = List.generate(
+    //     categoriesNotifier.state.selectedCategories.length,
+    //     (index) => RecipeFilterModel(
+    //         field: FirebaseFields.categoryId,
+    //         value: categoriesNotifier.state.selectedCategories[index].id));
+
+    var categoryFilter = RecipeFilterModel(
+        field: FirebaseFields.categoryId,
+        operator: FirebaseOperators.wherein,
+        value: List.generate(categoriesNotifier.state.selectedCategories.length,
+            (index) => categoriesNotifier.state.selectedCategories[index].id));
+
+    state = RecipeFilters([
+      if (categoriesNotifier.state.selectedCategories.isNotEmpty)
+        categoryFilter,
+      ...duration
+    ]);
   }
 }

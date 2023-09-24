@@ -11,7 +11,7 @@ class CookingTimeDuration extends ConsumerStatefulWidget {
       {Key? key, required this.filterNotifier, required this.durationProvider})
       : super(key: key);
   final RecipesFilterNotifier filterNotifier;
-  final StateNotifierProvider<SearchDurationFilter, RangeValues>
+  final StateNotifierProvider<SearchDurationFilter, RangeValues?>
       durationProvider;
 
   @override
@@ -40,11 +40,11 @@ class _CookingTimeDurationState extends ConsumerState<CookingTimeDuration> {
           data: SliderThemeData(thumbShape: SliderComponentShape.noThumb),
           child: RangeSlider(
             onChangeStart: (val) {},
-            values: selectedDuration,
+            values: selectedDuration ?? const RangeValues(0, 0),
             onChanged: (val) {
               ref.read(widget.durationProvider.notifier).updateDuration(val);
             },
-            min: 2,
+            min: 0,
             max: 120,
           ),
         ),
@@ -53,7 +53,7 @@ class _CookingTimeDurationState extends ConsumerState<CookingTimeDuration> {
         ),
         Center(
             child: Text(
-          '${selectedDuration.start.round()} - ${selectedDuration.end.round()} minutes',
+          '${selectedDuration?.start.round() ?? 0} - ${selectedDuration?.end.round() ?? 0} minutes',
           style: Theme.of(context).textTheme.titleLarge,
         )),
         const SizedBox(
@@ -72,7 +72,6 @@ class _CookingTimeDurationState extends ConsumerState<CookingTimeDuration> {
             ),
             onPressed: () {
               _applyFilter();
-
             }),
         const SizedBox(
           height: 16,

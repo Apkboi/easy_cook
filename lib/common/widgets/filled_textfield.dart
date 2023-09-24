@@ -99,7 +99,7 @@ class _FilledTextFieldState extends State<FilledTextField> {
                   ? OutlineInputBorder(
                       gapPadding: 2,
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.primary,
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(10))

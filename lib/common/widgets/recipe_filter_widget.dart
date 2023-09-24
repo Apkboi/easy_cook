@@ -21,7 +21,7 @@ class RecipeFilterWidget extends ConsumerStatefulWidget {
   final StateNotifierProvider<SelectedCategoryNotifier, SelectedCategories>
       selectedCategoryProvider;
   final RecipesFilterNotifier filtersNotifier;
-  final StateNotifierProvider<SearchDurationFilter, RangeValues>
+  final StateNotifierProvider<SearchDurationFilter, RangeValues?>
       durationProvider;
 
   @override

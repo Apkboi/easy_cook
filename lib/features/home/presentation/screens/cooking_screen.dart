@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
+import 'package:easy_cook/core/utils/app_utils.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
 import 'package:easy_cook/features/home/presentation/components/cooking_step_item.dart';
 import 'package:easy_cook/features/home/presentation/provider/cooking_steps_provider.dart';
+import 'package:easy_cook/features/home/presentation/provider/cooking_timer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -47,6 +49,7 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
                       });
                     },
                     controller: pageController,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => CookingStepItem(
                       recipe: widget.recipe,
                       step: data.toList()[index],
@@ -72,9 +75,12 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
                       children: [
                         Expanded(
                             child: TextButton(
-                                onPressed: () {
-                                  switchStep(currentIndex - 1, data.length);
-                                },
+                                onPressed: (currentIndex + 1) > 1
+                                    ? () {
+                                        switchStep(
+                                            currentIndex - 1, data.length);
+                                      }
+                                    : null,
                                 child: const Text('Previous'))),
                         const SizedBox(
                           width: 16,
@@ -84,9 +90,12 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
                         //     icon: const Icon(FluentIcons.pause_32_filled)),
                         Expanded(
                             child: TextButton(
-                                onPressed: () {
-                                  switchStep(currentIndex + 1, data.length);
-                                },
+                                onPressed: (currentIndex + 1) < data.length
+                                    ? () {
+                                        switchStep(
+                                            currentIndex + 1, data.length);
+                                      }
+                                    : null,
                                 child: const Text('Next step'))),
                       ],
                     ),
@@ -110,14 +119,23 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
   }
 
   void switchStep(int index, int max) {
-    if (index + 1 <= max && index >= 0) {
-      pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-      setState(() {
-        currentIndex = index;
-      });
+    final timer = ref.watch(cookingTimerProvider);
+
+    if (timer.isRunning) {
+      showConfirmDialog(context, onDismiss: () {}, onConfirm: () {
+        ref.watch(cookingTimerProvider.notifier).reset();
+      },
+          subtitle: 'There is a timer currently running',
+          tittle: "Do you want to stop the current timer ?");
+    } else {
+      ref.watch(cookingTimerProvider.notifier).reset();
+      if (index + 1 <= max && index >= 0) {
+        pageController.animateToPage(index,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+        setState(() {
+          currentIndex = index;
+        });
+      }
     }
   }
-
-
 }
