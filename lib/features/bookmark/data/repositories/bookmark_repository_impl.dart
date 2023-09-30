@@ -14,46 +14,20 @@ class BookmarkRepositoryImpl extends BookmarkRepository {
 
   @override
   Stream<Either<AppError, List<RecipeModel>>> getUserBookMarks(
-      {required String uid}) {
+      {required String uid, required String query}) {
     try {
       StreamController<Either<AppError, List<RecipeModel>>> controller =
           StreamController<Either<AppError, List<RecipeModel>>>();
-      List<String> recpeIds = [];
 
-      // db.collection(FirebaseCollections.bookmarks)
-      //     .where(FirebaseFields.bookmarkedBy, isEqualTo: uid)
-      //     .snapshots()
-      //     .listen((event) {
-      //   log(event.docs.length.toString());
-      //
-      //   event.docs.map((e) async {
-      //     final bookMark = BookmarkModel.fromJson(e.data());
-      //     recpeIds.add(bookMark.recipeId);
-      //     if (recpeIds.isNotEmpty) {
-      //       log('Event received');
-      //       return db
-      //           .collection(FirebaseCollections.recipe)
-      //           .where(FirebaseFields.recipeId, whereIn: recpeIds)
-      //           .snapshots()
-      //           .map((event) {
-      //         controller.sink.add(Right(event.docs
-      //             .map((e) => RecipeModel.fromJson(e.data()))
-      //             .toList()));
-      //       });
-      //     } else {
-      //       controller.sink.add(const Right([]));
-      //     }
-      //   });
-      // });
+      db
+          .collection(FirebaseCollections.bookmarks)
+          .where(FirebaseFields.bookmarkedBy, isEqualTo: uid)
+          .snapshots()
+          .listen((event) {
+        _addBookmarkedRecipe(event, controller, query);
+      });
 
-      return Stream.periodic(
-        const Duration(
-          milliseconds: 400,
-        ),
-        (computationCount) {
-          return const Right([]);
-        },
-      );
+      return controller.stream;
     } on Exception catch (e) {
       return Stream.value(Left(AppError.fromException(e)));
     }
@@ -93,4 +67,27 @@ class BookmarkRepositoryImpl extends BookmarkRepository {
       }
     }
   }
+}
+
+void _addBookmarkedRecipe(
+    QuerySnapshot<Map<String, dynamic>> event,
+    StreamController<Either<AppError, List<RecipeModel>>> controller,
+    String query) {
+  var ids = event.docs.map((e) => e.data()[FirebaseFields.recipeId]);
+
+  // log("ALL IDS${ids.length.toString()}");
+
+  var collectionQuery = FirebaseFirestore.instance
+      .collection(FirebaseCollections.recipe)
+      .where("id", whereIn: ids);
+
+  collectionQuery.snapshots().listen((event) {
+    controller.sink.add(Right(event.docs
+        .map((e) => RecipeModel.fromJson(e.data()))
+        .toList()
+        .where((element) =>
+            element.name.toUpperCase().contains(query.toUpperCase()))
+        .toList()));
+    // log("RECIPES${event.size.toString()}");
+  });
 }

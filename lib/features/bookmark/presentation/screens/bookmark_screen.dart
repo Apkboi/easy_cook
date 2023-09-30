@@ -6,6 +6,7 @@ import 'package:easy_cook/common/widgets/custom_search_bar.dart';
 import 'package:easy_cook/common/widgets/error_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmark_filter_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmarked_recipe.dart';
+import 'package:easy_cook/features/bookmark/presentation/provider/bookmark_query_provider.dart';
 import 'package:easy_cook/features/bookmark/presentation/provider/bookmarks_provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,8 @@ class BookmarkScreen extends ConsumerStatefulWidget {
 class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
   @override
   Widget build(BuildContext context) {
-    final bookmarks = ref.watch(bookmarksProvider);
+    final bookmarks =
+        ref.watch(bookmarksProvider(ref.watch(bookmarkQueryProvider)));
     return Scaffold(
       body: NestedScrollView(
           floatHeaderSlivers: true,
@@ -42,8 +44,16 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                       ),
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                               child: CustomSearchBar(
+                                  onChanged: (val) {
+                                    if (val != null) {
+
+                                      ref.read(bookmarkQueryProvider.notifier)
+                                          .state = val;
+
+                                    }
+                                  },
                                   tittle: 'Search saved recipes.json')),
                           const SizedBox(
                             width: 10,
@@ -112,7 +122,7 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                     title: 'No bookmarks',
                     message: "You have no bookmarks yet explore more recipes.",
                     onTap: () {
-                      ref.refresh(bookmarksProvider);
+                      ref.refresh(bookmarksProvider(""));
                     },
                   ),
                 ],
