@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_cook/common/widgets/bookmark_icon.dart';
 import 'package:easy_cook/common/widgets/stacked_images_widget.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
@@ -59,16 +60,14 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                     size: 20,
                   )),
               actions: [
-                IconButton(
-                    style: IconButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background),
-                    onPressed: () {},
-                    icon: Icon(
-                      FluentIcons.bookmark_32_filled,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
+                BookmarkIcon(
+                  widget.recipe.id,
+                  unBookMarkedColor:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  buttonStyle: IconButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.background),
+                )
               ],
               flexibleSpace: Hero(
                 tag: widget.heroTag,

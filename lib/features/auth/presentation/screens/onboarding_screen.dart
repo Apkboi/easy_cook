@@ -1,23 +1,29 @@
+import 'dart:developer';
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/common/widgets/custom_button.dart';
 import 'package:easy_cook/common/widgets/custom_outlined_button.dart';
+import 'package:easy_cook/core/constants/storage_keys.dart';
+import 'package:easy_cook/core/helpers/storage_helper.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/core/utils/app_images.dart';
+import 'package:easy_cook/features/auth/presentation/provider/auth_notifier_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
+    ref.watch(authNotifierProvider);
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -106,6 +112,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   CustomOutlinedButton(
                     onPressed: () {
+                      StorageHelper.setBoolean(
+                          StorageKeys.loggedInAnonymously, true);
                       context.router.push(const DashBoardRoute());
                     },
                     outlinedColr: Theme.of(context).colorScheme.primary,
@@ -124,5 +132,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+
+    log('UI DISPOSED');
+
+    super.dispose();
   }
 }

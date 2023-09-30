@@ -1,40 +1,50 @@
-import 'package:easy_cook/features/auth/dormain/typedefs/user_id.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
-class AuthState<T> {
-  final T? result;
-  final bool isLoading;
-  final UserId? userId;
+class AuthState {
+  final AuthStatus authStatus;
+  final User? user;
+  final String? error;
 
   const AuthState({
-    required this.result,
-    required this.isLoading,
-    required this.userId,
+    required this.authStatus,
+    required this.user,
+    required this.error,
   });
 
   const AuthState.unknown()
-      : result = null,
-        isLoading = false,
-        userId = null;
+      : authStatus = AuthStatus.unauthenticated,
+        error = null,
+        user = null;
 
-  AuthState copiedWithIsLoading(bool isLoading) => AuthState(
-        result: result,
-        isLoading: isLoading,
-        userId: userId,
+  AuthState copiedWithIsLoading(AuthStatus isLoading) => AuthState(
+        authStatus: isLoading,
+        user: user,
+        error: error,
+      );
+
+  AuthState copyWith(
+          {AuthStatus? newAuthState, User? newUser, String? newError}) =>
+      AuthState(
+        authStatus: newAuthState ?? authStatus,
+        user: newUser ?? user,
+        error: newError ?? error,
       );
 
   @override
   bool operator ==(covariant AuthState other) =>
       identical(this, other) ||
-      (result == other.result &&
-          isLoading == other.isLoading &&
-          userId == other.userId);
+      (error == other.error &&
+          authStatus == other.authStatus &&
+          user == other.user);
 
   @override
   int get hashCode => Object.hash(
-        result,
-        isLoading,
-        userId,
+        error,
+        authStatus,
+        user,
       );
 }
+
+enum AuthStatus { loading, authenticated, unauthenticated }

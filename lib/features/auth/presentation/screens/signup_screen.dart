@@ -1,11 +1,21 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_cook/common/widgets/circular_loader.dart';
 import 'package:easy_cook/common/widgets/custom_button.dart';
 import 'package:easy_cook/common/widgets/filled_textfield.dart';
+import 'package:easy_cook/core/constants/storage_keys.dart';
+import 'package:easy_cook/core/helpers/storage_helper.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
+import 'package:easy_cook/core/utils/app_utils.dart';
+import 'package:easy_cook/features/auth/data/models/auth_state.dart';
+import 'package:easy_cook/features/auth/dormain/models/signup_payload.dart';
+import 'package:easy_cook/features/auth/presentation/provider/auth_notifier_provider.dart';
+import 'package:easy_cook/features/auth/presentation/provider/is_logged_in_provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
 class SignupScreen extends StatefulWidget {
@@ -16,93 +26,163 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              Text(
-                'Create a new\naccount',
-                style: GoogleFonts.croissantOne(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              FilledTextField(
-                outline: true,
-                hasElevation: false,
-                preffix: const Icon(FluentIcons.person_24_regular),
-                contentPadding: const EdgeInsets.all(20),
-                hint: 'Full name',
-                fillColor: Theme.of(context)
-                    .colorScheme
-                    .surfaceVariant
-                    .withOpacity(0.1),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FilledTextField(
-                outline: true,
-                hasElevation: false,
-                preffix: const Icon(FluentIcons.mail_24_regular),
-                contentPadding: const EdgeInsets.all(20),
-                hint: 'Email',
-                fillColor: Theme.of(context)
-                    .colorScheme
-                    .surfaceVariant
-                    .withOpacity(0.1),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FilledTextField(
-                outline: true,
-                hasElevation: false,
-                preffix: const Icon(FluentIcons.lock_closed_key_24_regular),
-                contentPadding: const EdgeInsets.all(20),
-                hint: 'Password',
-                obscured: true,
-                fillColor: Theme.of(context)
-                    .colorScheme
-                    .surfaceVariant
-                    .withOpacity(0.1),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              CustomButton(
-                onPressed: () {},
-                padding: const EdgeInsets.all(20),
-                child: const Text('Create Account'),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Already have an account ?'),
-                  TextButton(
-                      onPressed: () {
-                        context.router.push(const LoginRoute());
-                      },
-                      child: const Text('Login'))
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    'Create a new\naccount',
+                    style: GoogleFonts.croissantOne(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  FilledTextField(
+                    outline: true,
+                    hasElevation: false,
+                    preffix: const Icon(FluentIcons.person_24_regular),
+                    contentPadding: const EdgeInsets.all(20),
+                    controller: _fullNameController,
+                    hint: 'Full name',
+                    validator: RequiredValidator(errorText: 'Enter Full name'),
+                    fillColor: Theme.of(context)
+                        .colorScheme
+                        .surfaceVariant
+                        .withOpacity(0.1),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FilledTextField(
+                    outline: true,
+                    hasElevation: false,
+                    controller: _emailController,
+                    preffix: const Icon(FluentIcons.mail_24_regular),
+                    contentPadding: const EdgeInsets.all(20),
+                    hint: 'Email',
+                    validator: MultiValidator([
+                      RequiredValidator(errorText: 'Enter Email'),
+                      EmailValidator(errorText: 'Invalid Email')
+                    ]),
+                    fillColor: Theme.of(context)
+                        .colorScheme
+                        .surfaceVariant
+                        .withOpacity(0.1),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FilledTextField(
+                    outline: true,
+                    hasElevation: false,
+                    controller: _passwordController,
+                    preffix: const Icon(FluentIcons.lock_closed_key_24_regular),
+                    contentPadding: const EdgeInsets.all(20),
+                    hint: 'Password',
+                    obscured: true,
+                    validator: MultiValidator([
+                      RequiredValidator(errorText: 'Enter Password'),
+                      MinLengthValidator(8,
+                          errorText: "Email must be up to 8 characters")
+                    ]),
+                    fillColor: Theme.of(context)
+                        .colorScheme
+                        .surfaceVariant
+                        .withOpacity(0.1),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Consumer(builder: (context, ref, child) {
+                    final authState = ref.watch(authNotifierProvider);
+
+                    return CustomButton(
+                      onPressed: authState.authStatus == AuthStatus.loading
+                          ? null
+                          : () {
+                              _signup(ref, authState);
+                            },
+                      padding: const EdgeInsets.all(20),
+                      child: authState.authStatus == AuthStatus.loading
+                          ? const CircularLoader(
+                              size: 20,
+                            )
+                          : const Text('Create Account'),
+                    );
+                  }),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      const Text('Already have an account ?'),
+                      TextButton(
+                          onPressed: () {
+                            context.router.push(const LoginRoute());
+                          },
+                          child: const Text('Login'))
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _signup(WidgetRef ref, AuthState authState) async {
+    if (_formKey.currentState!.validate()) {
+      await ref.read(authNotifierProvider.notifier).registerUser(
+          signupPayload: SignupPayload(
+              fullname: _fullNameController.text,
+              email: _emailController.text,
+              password: _passwordController.text));
+
+      _listenToAuthStates(ref);
+    }
+  }
+
+  Future<void> _listenToAuthStates(WidgetRef ref) async {
+    if (ref.read(authNotifierProvider).authStatus == AuthStatus.authenticated) {
+      var loggedInAnonyMously = await StorageHelper.getBoolean(
+          StorageKeys.loggedInAnonymously, false);
+
+      if (loggedInAnonyMously) {
+        context.router.pop();
+      } else {
+        context.router.push(const DashBoardRoute());
+        CustomSnackBar.showSuccess(context,
+            message: "User logged in successfully", action: () {});
+      }
+
+      ref.read(isLoggedInProvider.notifier).refreshAuthState();
+    }
+    if (ref.read(authNotifierProvider).error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        CustomSnackBar.showError(context,
+            message: ref.read(authNotifierProvider).error!, action: () {});
+      });
+    }
   }
 }

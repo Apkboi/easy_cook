@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_cook/common/widgets/bookmark_icon.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
 class TrendingRecipeItem extends StatefulWidget {
@@ -24,7 +24,8 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
       onTap: () {
         // log(context.router.root.currentPath);
         try {
-          context.router.root.push(RecipeDetailsRoute(recipe: widget.recipe, heroTag: 'recipe${widget.recipe.id}'));
+          context.router.root.push(RecipeDetailsRoute(
+              recipe: widget.recipe, heroTag: 'recipe${widget.recipe.id}'));
         } on Exception catch (e) {
           log(e.toString());
         }
@@ -104,14 +105,7 @@ class _TrendingRecipeItemState extends State<TrendingRecipeItem> {
                                                 fontWeight: FontWeight.w700),
                                       ),
                                     ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          FluentIcons.bookmark_28_filled,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ))
+                                    BookmarkIcon(widget.recipe.id)
                                   ],
                                 ),
                                 const SizedBox(

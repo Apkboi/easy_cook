@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:easy_cook/common/models/categories.dart';
+import 'package:easy_cook/common/provider/user_cache_provider.dart';
 import 'package:easy_cook/features/home/presentation/components/recipe_category_switcher.dart';
 import 'package:easy_cook/features/home/presentation/components/recipes_by_categories.dart';
 import 'package:easy_cook/features/home/presentation/components/trending_recipe_widget.dart';
@@ -75,35 +76,38 @@ class _TittleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello Victor,',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              'What you want to cook today ?',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w600, color: Colors.grey),
-            ),
-          ],
-        )),
-        const Text(
-          '👳‍',
-          style: TextStyle(fontSize: 40),
-        )
-      ],
-    );
+    return Consumer(builder: (context, ref, child) {
+      final cachedUser = ref.watch(userCacheProvider);
+      return Row(
+        children: [
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hello ${cachedUser?.fullName ?? "Guest"},',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'What you want to cook today ?',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600, color: Colors.grey),
+              ),
+            ],
+          )),
+          const Text(
+            '👳‍',
+            style: TextStyle(fontSize: 40),
+          )
+        ],
+      );
+    });
   }
 }

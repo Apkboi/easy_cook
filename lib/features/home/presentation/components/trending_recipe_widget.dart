@@ -56,9 +56,10 @@ class _TrendingRecipeWidgetState extends ConsumerState<TrendingRecipeWidget> {
         return Text(error.toString());
       },
       loading: () {
-        return const SizedBox(
-            height: 50,
-            child: Center(
+        return SizedBox(
+            height: 200,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
                 child: SizedBox(
                     height: 20,
                     width: 20,

@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_cook/core/constants/storage_keys.dart';
+import 'package:easy_cook/core/helpers/storage_helper.dart';
 import 'package:easy_cook/core/navigation/route_paths.dart';
 
 import 'app_router.gr.dart';
@@ -8,7 +12,10 @@ import 'app_router.gr.dart';
 class AppRouter extends $AppRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: OnboardingRoute.page, initial: true),
+        AutoRoute(
+            page: OnboardingRoute.page,
+            initial: true,
+            guards: [OnboardingGuard()]),
         AutoRoute(page: SignupRoute.page, path: signup),
         AutoRoute(page: LoginRoute.page, path: login),
         AutoRoute(page: RecipeDetailsRoute.page, path: recipeDetailsScreen),
@@ -28,6 +35,24 @@ class AppRouter extends $AppRouter {
           AutoRoute(
               page: SearchTab.page,
               children: [AutoRoute(page: SearchRoute.page, initial: true)]),
-        ]),
+        ], guards: []),
       ];
+}
+
+class OnboardingGuard extends AutoRouteGuard {
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
+    bool isLoggedIn =
+        await StorageHelper.getBoolean(StorageKeys.stayLoggedIn, false);
+    bool isLoggedInAnonymously =
+        await StorageHelper.getBoolean(StorageKeys.loggedInAnonymously, false);
+
+    log("IS ANONYMOUS USER: $isLoggedInAnonymously");
+    log("IS LOGGED IN: $isLoggedIn");
+    if (isLoggedIn || isLoggedInAnonymously) {
+      resolver.redirect(const DashBoardRoute());
+    } else {
+      return resolver.next();
+    }
+  }
 }

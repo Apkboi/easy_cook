@@ -6,14 +6,11 @@ class StorageKeys {
   static const String cachedUserPin = "USERPIN";
   static const String favoriteWallets = "FAVORITEWALLETS";
   static String passcodeEnabled = 'PASSCODE_ENABLED';
-  static String biometricEnabled = 'BIOMETRIC_ENABLED';
+  static String loggedInAnonymously = 'LOGGED_IN_ANONYMOUSLY';
 
 
-  // static String lastname = 'FIRSTNAME';
-  // static String transactionKey = 'transaction pin';
+
+
 }
 
-// class HiveStoreKeys{
-//   static const String userData = 'user_data';
-//   static const String userProfile = 'user_profile';
-// }
+

@@ -1,23 +1,28 @@
 import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
+import 'package:easy_cook/common/widgets/circular_loader.dart';
 import 'package:easy_cook/common/widgets/custom_search_bar.dart';
+import 'package:easy_cook/common/widgets/error_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmark_filter_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmarked_recipe.dart';
+import 'package:easy_cook/features/bookmark/presentation/provider/bookmarks_provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class BookmarkScreen extends StatefulWidget {
+class BookmarkScreen extends ConsumerStatefulWidget {
   const BookmarkScreen({Key? key}) : super(key: key);
 
   @override
-  State<BookmarkScreen> createState() => _BookmarkScreenState();
+  ConsumerState<BookmarkScreen> createState() => _BookmarkScreenState();
 }
 
-class _BookmarkScreenState extends State<BookmarkScreen> {
+class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
   @override
   Widget build(BuildContext context) {
+    final bookmarks = ref.watch(bookmarksProvider);
     return Scaffold(
       body: NestedScrollView(
           floatHeaderSlivers: true,
@@ -90,12 +95,44 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   ),
                 ))
               ],
-          body: Builder(
-            builder: (context) => ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemBuilder: (context, index) => const BookmarkedRecipe(),
-            ),
-          )),
+          body: bookmarks.when(data: (data) {
+            if (data.isNotEmpty) {
+              return Builder(
+                builder: (context) => ListView.builder(
+                  itemCount: data.length,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemBuilder: (context, index) => const BookmarkedRecipe(),
+                ),
+              );
+            } else {
+              return ListView(
+                children: [
+                  AppPromptWidget(
+                    isSvgResource: false,
+                    title: 'No bookmarks',
+                    message: "You have no bookmarks yet explore more recipes.",
+                    onTap: () {
+                      ref.refresh(bookmarksProvider);
+                    },
+                  ),
+                ],
+              );
+            }
+          }, error: (e, stack) {
+            return ListView(
+              children: [
+                AppPromptWidget(
+                  title: e.toString(),
+                ),
+              ],
+            );
+          }, loading: () {
+            return Center(
+              child: CircularLoader(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            );
+          })),
     );
   }
 }

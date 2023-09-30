@@ -68,8 +68,7 @@ class _RecipeCategorySwitcherState
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: InkWell(
                     onTap: () {
-                      ref.read(widget.switcherProvider.notifier).state =
-                          data.toList()[index];
+                      ref.read(widget.switcherProvider.notifier).state = data.toList()[index];
                     },
                     child: SwitcherButton(
                       isSelected: ref.watch(widget.switcherProvider)?.id ==
@@ -87,7 +86,7 @@ class _RecipeCategorySwitcherState
         return Text(error.toString());
       },
       loading: () {
-        return const CircularProgressIndicator();
+        return Container();
       },
     );
   }

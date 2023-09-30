@@ -1,8 +1,13 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:easy_cook/common/widgets/custom_button.dart';
 import 'package:easy_cook/common/widgets/custom_outlined_button.dart';
+import 'package:easy_cook/core/constants/storage_keys.dart';
+import 'package:easy_cook/core/helpers/storage_helper.dart';
 import 'package:easy_cook/core/theme/app_colors.dart';
+import 'package:easy_cook/features/auth/presentation/screens/onboarding_screen.dart';
+import 'package:easy_cook/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 void showConfirmDialog(BuildContext context,
@@ -17,7 +22,6 @@ void showConfirmDialog(BuildContext context,
     builder: (context) => BackdropFilter(
       filter: ImageFilter.blur(sigmaY: 3, sigmaX: 3),
       child: AlertDialog(
-
           backgroundColor: Theme.of(context).cardTheme.color,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding:
@@ -25,7 +29,9 @@ void showConfirmDialog(BuildContext context,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 tittle ?? 'Are you sure you want to exit ?',
                 textAlign: TextAlign.center,
@@ -74,13 +80,37 @@ void showConfirmDialog(BuildContext context,
                   ),
                 ],
               ),
-              const SizedBox(height: 20,),
-
+              const SizedBox(
+                height: 20,
+              ),
             ],
           )),
     ),
   );
 }
+
+Future<Widget> getFirstScreen() async {
+  bool hasOnboarded =
+      await StorageHelper.getBoolean(StorageKeys.hasOnBoarded, false);
+  bool isLoggedIn =
+      await StorageHelper.getBoolean(StorageKeys.stayLoggedIn, false);
+  bool isLoggedInAnonymously =
+      await StorageHelper.getBoolean(StorageKeys.loggedInAnonymously, false);
+
+// String? token =
+// await StorageHelper.getString(StorageKeys.token);
+  log("IS ANONYMOUS USER: $hasOnboarded");
+  log("IS LOGGED IN: $isLoggedIn");
+  if (isLoggedIn || isLoggedInAnonymously) {
+    return const DashBoardScreen();
+
+  } else {
+    return const OnboardingScreen();
+  }
+}
+
+bool isThereCurrentDialogShowing(BuildContext context) =>
+    ModalRoute.of(context)?.isCurrent != true;
 
 class CustomSnackBar {
   final BuildContext context;
@@ -180,7 +210,6 @@ class CustomSnackBar {
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w500,
-
           color: Colors.white,
         ),
       ),

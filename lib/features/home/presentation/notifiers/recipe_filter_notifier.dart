@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:easy_cook/common/models/recipe_filters_model.dart';
 import 'package:easy_cook/core/constants/firebase/firebase_fields.dart';
 import 'package:easy_cook/core/constants/firebase/firebase_operators.dart';
@@ -27,6 +26,7 @@ class RecipesFilterNotifier extends StateNotifier<RecipeFilters> {
       categoriesNotifier.removeById(filter.value);
     } else if (filter.field == "duration") {
       //  TODO: REMOVE/RESET DURATION....
+
     }
 
     applyFilter();
@@ -35,19 +35,6 @@ class RecipesFilterNotifier extends StateNotifier<RecipeFilters> {
   // ========= Updating the state of the filter  =============
 
   void applyFilter() {
-    // var searchQuery = query.isEmpty
-    //     ? []
-    //     : [
-    //         RecipeFilterModel(
-    //             field: FirebaseFields.name,
-    //             value: query,
-    //             operator: 'fieldsContains'),
-    //         // RecipeFilterModel(
-    //         //     field: FirebaseFields.description,
-    //         //     value: query,
-    //         //     operator: 'fieldsContains'),
-    //       ];
-
     var duration = durationFilter.state == null
         ? []
         : [
@@ -62,12 +49,6 @@ class RecipesFilterNotifier extends StateNotifier<RecipeFilters> {
           ];
 
     log("Applied categories ${categoriesNotifier.state.selectedCategories.length.toString()}");
-
-    // var categories = List.generate(
-    //     categoriesNotifier.state.selectedCategories.length,
-    //     (index) => RecipeFilterModel(
-    //         field: FirebaseFields.categoryId,
-    //         value: categoriesNotifier.state.selectedCategories[index].id));
 
     var categoryFilter = RecipeFilterModel(
         field: FirebaseFields.categoryId,

@@ -103,8 +103,7 @@ class HomeRecipeRepositoryImpl extends HomeRecipeRepository {
         FirebaseFirestore.instance.collection(FirebaseCollections.recipe);
 
     Query<Map<String, dynamic>> query = itemsCollection;
-    // final List<Stream<QuerySnapshot<Map<String, dynamic>>>> allQuerySnapShots =
-    //     [];
+
 
     final filteredQuery = query.applyFilters(filters: filters);
 
@@ -118,22 +117,6 @@ class HomeRecipeRepositoryImpl extends HomeRecipeRepository {
           .toList());
     });
 
-    //
-    // if (allQuerySnapShots.isEmpty) {
-    //   return query.snapshots().map((event) {
-    //     return Right(
-    //         event.docs.map((e) => RecipeModel.fromJson(e.data())).toList());
-    //   });
-    // } else {
-    //   return StreamZip<QuerySnapshot<Map<String, dynamic>>>(allQuerySnapShots)
-    //       .asBroadcastStream()
-    //       .map((event) {
-    //     final mergedDocuments =
-    //         event.expand((snapshot) => snapshot.docs).toList();
-    //     return Right(mergedDocuments
-    //         .map((e) => RecipeModel.fromJson(e.data()))
-    //         .toList());
-    //   });
-    // }
+
   }
 }
