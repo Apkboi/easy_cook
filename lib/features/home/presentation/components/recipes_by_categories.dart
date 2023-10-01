@@ -1,4 +1,5 @@
 import 'package:easy_cook/common/models/categories.dart';
+import 'package:easy_cook/common/widgets/error_widget.dart';
 import 'package:easy_cook/features/home/presentation/components/home_recipe_item.dart';
 import 'package:easy_cook/features/home/presentation/provider/recipes_by_category_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,19 +25,38 @@ class _RecipesByCategoriesState extends ConsumerState<RecipesByCategories> {
 
     return recipeProvider.when(
       data: (data) {
-        return ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: data.length,
-          itemBuilder: (context, index) => HomeRecipeItem(
-            recipe: data.toList()[index],
-          ),
-        );
+        if (data.isNotEmpty) {
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: data.length,
+            itemBuilder: (context, index) => HomeRecipeItem(
+              recipe: data.toList()[index],
+            ),
+          );
+        } else {
+          return ListView(
+            children: const [
+              AppPromptWidget(
+                title: "No recipes here",
+                canTryAgain: false,
+                message: '',
+              )
+            ],
+          );
+        }
       },
       error: (error, stackTrace) {
         return Text(error.toString());
       },
       loading: () {
-        return Container();
+        return SizedBox(
+            height: 200,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+                child: SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator())));
       },
     );
   }

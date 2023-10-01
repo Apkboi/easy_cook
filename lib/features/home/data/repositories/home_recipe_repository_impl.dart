@@ -104,7 +104,6 @@ class HomeRecipeRepositoryImpl extends HomeRecipeRepository {
 
     Query<Map<String, dynamic>> query = itemsCollection;
 
-
     final filteredQuery = query.applyFilters(filters: filters);
 
     return filteredQuery.snapshots().map((event) {
@@ -113,10 +112,8 @@ class HomeRecipeRepositoryImpl extends HomeRecipeRepository {
           .toList()
           .where((element) => element.name
               .toUpperCase()
-              .contains(queryText?.toUpperCase() ?? ''))
+              .contains(queryText?.toUpperCase() ?? ' '))
           .toList());
     });
-
-
   }
 }

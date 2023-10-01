@@ -42,7 +42,7 @@ class _CookingStepItemState extends ConsumerState<CookingStepItem> {
                 ],
               )),
           const SizedBox(
-            height: 30,
+            height: 10,
           ),
           // Center(
           //   child: Stack(
@@ -56,10 +56,13 @@ class _CookingStepItemState extends ConsumerState<CookingStepItem> {
           //         ),
           //       ),
           //       SizedBox(
-          //           child: Image.asset(
-          //         AppImages.vegeIcon,
-          //         height: 120,
-          //         width: 120,
+          //           child: Text(
+          //         '${(timer.duration / 60).toInt().toString().padLeft(2, '0')} : ${(timer.duration % 60).toString().padLeft(2, '0')}',
+          //         style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          //               fontWeight: FontWeight.w600,
+          //               fontSize: 25,
+          //               color: Theme.of(context).colorScheme.primary,
+          //             ),
           //       ))
           //     ],
           //   ),
@@ -67,7 +70,7 @@ class _CookingStepItemState extends ConsumerState<CookingStepItem> {
 
           Center(
               child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
@@ -132,15 +135,27 @@ class _CookingStepItemState extends ConsumerState<CookingStepItem> {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 25,
           ),
-          const SizedBox(
-            height: 16,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Process',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                  color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+            ),
           ),
+
           ...List.generate(
             widget.step.timing.length,
             (index) => Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(5.0),
               child: TimingItem(
                 isPlaying: index == 0,
                 timing: widget.step.timing[index],

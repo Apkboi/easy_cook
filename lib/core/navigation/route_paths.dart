@@ -10,3 +10,4 @@ const initial = '/';
  const recipeDetailsScreen = '/recipe_details';
  const settingsScreen = '/settings_screen';
  const cookingScreen = '/cooking_screen';
+ const cookingCompleteScreen = '/cooking_complete_screen';

@@ -79,9 +79,11 @@ void _addBookmarkedRecipe(
 
   var collectionQuery = FirebaseFirestore.instance
       .collection(FirebaseCollections.recipe)
-      .where("id", whereIn: ids);
+      .where("id", whereIn: ids.isNotEmpty ? ids : [""]);
 
   collectionQuery.snapshots().listen((event) {
+    log("EVENT DON REACH HERE");
+
     controller.sink.add(Right(event.docs
         .map((e) => RecipeModel.fromJson(e.data()))
         .toList()

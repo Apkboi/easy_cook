@@ -21,6 +21,7 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: RecipeDetailsRoute.page, path: recipeDetailsScreen),
         AutoRoute(page: SettingsRoute.page, path: recipeDetailsScreen),
         AutoRoute(page: CookingRoute.page, path: cookingScreen),
+        AutoRoute(page: CookingCompleteRoute.page, path: cookingCompleteScreen),
         AutoRoute(page: DashBoardRoute.page, path: dashboard, children: [
           AutoRoute(page: HomeTab.page, initial: true, children: [
             AutoRoute(page: HomeRoute.page, initial: true),

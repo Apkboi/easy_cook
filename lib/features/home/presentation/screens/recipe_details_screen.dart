@@ -5,6 +5,7 @@ import 'package:easy_cook/common/widgets/stacked_images_widget.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
 import 'package:easy_cook/features/home/presentation/components/ingredients_item.dart';
+import 'package:easy_cook/features/home/presentation/components/review_item.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -25,16 +26,19 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary),
-          onPressed: () {
-            context.router.root.push(CookingRoute(recipe: widget.recipe));
-          },
-          child: const Text(
-            'Start Cooking',
-            style: TextStyle(color: Colors.white),
-          )),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary),
+            onPressed: () {
+              context.router.root.push(CookingRoute(recipe: widget.recipe));
+            },
+            child: const Text(
+              'Start Cooking',
+              style: TextStyle(color: Colors.white),
+            )),
+      ),
       body: NestedScrollView(
         // floatHeaderSlivers: true,
         physics: const BouncingScrollPhysics(),
@@ -79,7 +83,8 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                 ),
               ),
               bottom: PreferredSize(
-                preferredSize: const Size(0, 250),
+                preferredSize:
+                    Size(0, MediaQuery.of(context).size.height * 0.5),
                 child: SizedBox(
                   height: 250,
                   width: MediaQuery.of(context).size.width,
@@ -257,6 +262,34 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                   child: IngredientsItem(
                     ingredient: widget.recipe.ingredients[index],
                   ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 16,
+                ),
+              ),
+             SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '👏 Reviews',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 16,
+                ),
+              ),
+              SliverList.builder(
+                itemBuilder: (context, index) => const Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: ReviewItem(),
                 ),
               )
             ]),

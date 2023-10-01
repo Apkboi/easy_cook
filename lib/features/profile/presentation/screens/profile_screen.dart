@@ -1,11 +1,14 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/common/provider/user_cache_provider.dart';
+import 'package:easy_cook/common/widgets/circular_loader.dart';
 import 'package:easy_cook/common/widgets/error_widget.dart';
-import 'package:easy_cook/core/helpers/storage_helper.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/core/utils/app_images.dart';
 import 'package:easy_cook/features/auth/presentation/provider/is_logged_in_provider.dart';
+import 'package:easy_cook/features/bookmark/presentation/provider/bookmark_query_provider.dart';
+import 'package:easy_cook/features/bookmark/presentation/provider/bookmarks_provider.dart';
+import 'package:easy_cook/features/search/presentation/components/recipe_item.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -24,6 +27,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final cachedUser = ref.watch(userCacheProvider);
     final isLoggedIn = ref.watch(isLoggedInProvider);
+    final bookmarks =
+        ref.watch(bookmarksProvider(ref.watch(bookmarkQueryProvider)));
     return Scaffold(
         body: isLoggedIn
             ? NestedScrollView(
@@ -130,23 +135,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Recently Viewed',
+                                  'Bookmarked Recipes',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium
                                       ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
-                                TextButton(
-                                    onPressed: () {
-                                      StorageHelper.clear();
-                                    },
-                                    child: const Text('View all'))
+                                // TextButton(
+                                //     onPressed: () {
+                                //       StorageHelper.clear();
+                                //     },
+                                //     child: const Text('View all'))
                               ],
                             ),
                           ],
@@ -155,30 +160,64 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ];
                 },
-                body: Builder(
-                  builder: (context) => GridView.custom(
-                    padding: const EdgeInsets.all(16.0),
-                    gridDelegate: SliverWovenGridDelegate.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 1,
-                      crossAxisSpacing: 0,
-                      // repeatPattern: QuiltedGridRepeatPattern.inverted,
-                      pattern: [
-                        const WovenGridTile(0.7),
-                        const WovenGridTile(
-                          0.65,
-                          crossAxisRatio: 1,
-                          alignment: AlignmentDirectional.centerEnd,
+                body: bookmarks.when(data: (data) {
+                  if (data.isNotEmpty) {
+                    return GridView.custom(
+                      padding: const EdgeInsets.all(16.0),
+                      gridDelegate: SliverWovenGridDelegate.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 1,
+                        crossAxisSpacing: 0,
+                        // repeatPattern: QuiltedGridRepeatPattern.inverted,
+                        pattern: [
+                          const WovenGridTile(0.7),
+                          const WovenGridTile(
+                            0.65,
+                            crossAxisRatio: 1,
+                            alignment: AlignmentDirectional.centerEnd,
+                          ),
+                        ],
+                      ),
+                      childrenDelegate: SliverChildBuilderDelegate(
+                        childCount: data.length,
+                        (context, index) => RecipeItem(
+                          recipe: data.toList()[index],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return ListView(
+                      children: [
+                        AppPromptWidget(
+                          isSvgResource: false,
+                          title: 'No bookmarks',
+                          message:
+                              "You have no bookmarks yet explore more recipes.",
+                          canTryAgain: false,
+                          onTap: () {
+                            ref.invalidate(bookmarksProvider(" "));
+
+                            // context.watchTabsRouter.setActiveIndex(1);
+                          },
                         ),
                       ],
+                    );
+                  }
+                }, error: (e, stack) {
+                  return ListView(
+                    children: [
+                      AppPromptWidget(
+                        title: e.toString(),
+                      ),
+                    ],
+                  );
+                }, loading: () {
+                  return Center(
+                    child: CircularLoader(
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-
-                    /// TODO: ADD RECIPE ITEM
-                    childrenDelegate: SliverChildBuilderDelegate(
-                        (context, index) => Container(),
-                        childCount: 4),
-                  ),
-                ),
+                  );
+                }),
               )
             : Center(
                 child: AppPromptWidget(

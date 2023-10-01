@@ -3,6 +3,7 @@ import 'package:auto_route/annotations.dart';
 
 import 'package:easy_cook/common/widgets/circular_loader.dart';
 import 'package:easy_cook/common/widgets/custom_search_bar.dart';
+import 'package:easy_cook/common/widgets/error_widget.dart';
 import 'package:easy_cook/common/widgets/recipe_filter_widget.dart';
 import 'package:easy_cook/features/home/presentation/notifiers/recipe_filter_notifier.dart';
 import 'package:easy_cook/features/home/presentation/notifiers/selected_categories_notifier.dart';
@@ -26,6 +27,7 @@ class SearchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipesByFilter =
         ref.watch(recipeByFilterProvider(ref.watch(searchFiltersProvider)));
+    final searchFilters = ref.watch(searchFiltersProvider);
 
     return Scaffold(
       body: NestedScrollView(
@@ -86,34 +88,77 @@ class SearchScreen extends ConsumerWidget {
                       const SizedBox(
                         height: 16,
                       ),
+                      SizedBox(
+                        height: searchFilters.filters.isNotEmpty ? 40 : 0,
+                        child: ListView.builder(
+                          itemCount: searchFilters.filters.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Chip(
+                              // backgroundColor:
+                              //     Theme.of(context).colorScheme.primary,
+                              deleteIconColor: Colors.grey,
+                              iconTheme:
+                                  const IconThemeData(color: Colors.white),
+                              shape: const StadiumBorder(
+                                  side: BorderSide(
+                                      width: 0.3, color: Colors.grey)),
+                              label: Text(
+                                searchFilters.filters[index].value.toString(),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                              onDeleted: () {},
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ))
               ],
           body: recipesByFilter.when(data: (data) {
-            return GridView.custom(
-              padding: const EdgeInsets.all(16.0),
-              gridDelegate: SliverWovenGridDelegate.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 1,
-                crossAxisSpacing: 0,
-                // repeatPattern: QuiltedGridRepeatPattern.inverted,
-                pattern: [
-                  const WovenGridTile(0.7),
-                  const WovenGridTile(
-                    0.65,
-                    crossAxisRatio: 1,
-                    alignment: AlignmentDirectional.centerEnd,
+            if (data.isNotEmpty) {
+              return GridView.custom(
+                padding: const EdgeInsets.all(16.0),
+                gridDelegate: SliverWovenGridDelegate.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 1,
+                  crossAxisSpacing: 0,
+                  // repeatPattern: QuiltedGridRepeatPattern.inverted,
+                  pattern: [
+                    const WovenGridTile(0.7),
+                    const WovenGridTile(
+                      0.65,
+                      crossAxisRatio: 1,
+                      alignment: AlignmentDirectional.centerEnd,
+                    ),
+                  ],
+                ),
+                childrenDelegate: SliverChildBuilderDelegate(
+                  childCount: data.length,
+                  (context, index) => RecipeItem(
+                    recipe: data.toList()[index],
+                  ),
+                ),
+              );
+            } else {
+              return ListView(
+                children: [
+                  AppPromptWidget(
+                    isSvgResource: false,
+                    title: 'No Recipes',
+                    message: "There are no matching recipes.",
+                    onTap: () {
+                      ref.invalidate(recipeByFilterProvider(
+                          ref.watch(searchFiltersProvider)));
+
+                      // context.watchTabsRouter.setActiveIndex(1);
+                    },
                   ),
                 ],
-              ),
-              childrenDelegate: SliverChildBuilderDelegate(
-                childCount: data.length,
-                (context, index) => RecipeItem(
-                  recipe: data.toList()[index],
-                ),
-              ),
-            );
+              );
+            }
           }, error: (e, stack) {
             return CustomScrollView(
               slivers: [

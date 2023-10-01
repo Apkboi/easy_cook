@@ -27,6 +27,7 @@ class RecipesFilterNotifier extends StateNotifier<RecipeFilters> {
     } else if (filter.field == "duration") {
       //  TODO: REMOVE/RESET DURATION....
 
+      // durationFilter.removeById(filter.value);
     }
 
     applyFilter();

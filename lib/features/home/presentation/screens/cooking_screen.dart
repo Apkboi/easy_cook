@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/core/utils/app_utils.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
+import 'package:easy_cook/features/home/data/models/step.dart';
 import 'package:easy_cook/features/home/presentation/components/cooking_step_item.dart';
 import 'package:easy_cook/features/home/presentation/provider/cooking_steps_provider.dart';
 import 'package:easy_cook/features/home/presentation/provider/cooking_timer_provider.dart';
@@ -21,6 +24,7 @@ class CookingScreen extends ConsumerStatefulWidget {
 class _CookingScreenState extends ConsumerState<CookingScreen> {
   final pageController = PageController();
   int currentIndex = 0;
+  int steplength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +35,40 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recipe.name),
-        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 35,
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.05),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      shape: const StadiumBorder(),
+                      side: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground)),
+                  onPressed: () {},
+                  child: Text(
+                    'step ${currentIndex + 1} of ${steplength}',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                  )),
+            ),
+          )
+        ],
+        centerTitle: false,
         elevation: 0,
       ),
       body: steps.when(
         data: (data) {
+          steplength = data.length;
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -58,47 +91,7 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
                 ),
                 Column(
                   children: [
-                    const SizedBox(
-                      height: 19,
-                    ),
-                    Center(
-                        child: Text(
-                      'step ${currentIndex + 1} of ${data.length}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                    )),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: TextButton(
-                                onPressed: (currentIndex + 1) > 1
-                                    ? () {
-                                        switchStep(
-                                            currentIndex - 1, data.length);
-                                      }
-                                    : null,
-                                child: const Text('Previous'))),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        // IconButton(
-                        //     onPressed: () {},
-                        //     icon: const Icon(FluentIcons.pause_32_filled)),
-                        Expanded(
-                            child: TextButton(
-                                onPressed: (currentIndex + 1) < data.length
-                                    ? () {
-                                        switchStep(
-                                            currentIndex + 1, data.length);
-                                      }
-                                    : null,
-                                child: const Text('Next step'))),
-                      ],
-                    ),
+                    _footer(data),
                     const SizedBox(
                       height: 30,
                     ),
@@ -137,5 +130,38 @@ class _CookingScreenState extends ConsumerState<CookingScreen> {
         });
       }
     }
+  }
+
+  _footer(Iterable<CookingStep> data) {
+    return Row(
+      children: [
+        Expanded(
+            child: TextButton(
+                onPressed: (currentIndex + 1) > 1
+                    ? () {
+                        switchStep(currentIndex - 1, data.length);
+                      }
+                    : null,
+                child: const Text('Previous'))),
+        const SizedBox(
+          width: 16,
+        ),
+        // IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(FluentIcons.pause_32_filled)),
+        Expanded(
+            child: TextButton(
+                onPressed: () {
+                  if (currentIndex + 1 == data.length) {
+                    context.router.replace(const CookingCompleteRoute());
+                  } else {
+                    switchStep(currentIndex + 1, data.length);
+                  }
+                },
+                child: Text(currentIndex + 1 == data.length
+                    ? "Complete"
+                    : 'Next step'))),
+      ],
+    );
   }
 }

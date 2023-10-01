@@ -1,14 +1,16 @@
 import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/common/widgets/circular_loader.dart';
 import 'package:easy_cook/common/widgets/custom_search_bar.dart';
 import 'package:easy_cook/common/widgets/error_widget.dart';
+import 'package:easy_cook/core/navigation/app_router.gr.dart';
+import 'package:easy_cook/features/auth/presentation/provider/is_logged_in_provider.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmark_filter_widget.dart';
 import 'package:easy_cook/features/bookmark/presentation/components/bookmarked_recipe.dart';
 import 'package:easy_cook/features/bookmark/presentation/provider/bookmark_query_provider.dart';
 import 'package:easy_cook/features/bookmark/presentation/provider/bookmarks_provider.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -25,125 +27,119 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
   Widget build(BuildContext context) {
     final bookmarks =
         ref.watch(bookmarksProvider(ref.watch(bookmarkQueryProvider)));
-    return Scaffold(
-      body: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverToBoxAdapter(
-                    child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      const _TittleBar(),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: CustomSearchBar(
-                                  onChanged: (val) {
-                                    if (val != null) {
-
-                                      ref.read(bookmarkQueryProvider.notifier)
-                                          .state = val;
-
-                                    }
-                                  },
-                                  tittle: 'Search saved recipes.json')),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 13),
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4))),
-                              onPressed: () {
-                                _showFilterDialog(context);
-                              },
-                              child: const Icon(FluentIcons.filter_28_regular)),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      SizedBox(
-                        height: 40,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Chip(
-                              // backgroundColor:
-                              //     Theme.of(context).colorScheme.primary,
-                              deleteIconColor: Colors.grey,
-                              iconTheme:
-                                  const IconThemeData(color: Colors.white),
-                              shape: const StadiumBorder(
-                                  side: BorderSide(
-                                      width: 0.3, color: Colors.grey)),
-                              label: const Text(
-                                'Beverages',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              onDeleted: () {},
+    final isLoggedIn = ref.watch(isLoggedInProvider);
+    return isLoggedIn
+        ? Scaffold(
+            body: NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      SliverToBoxAdapter(
+                          child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 60,
                             ),
-                          ),
+                            const _TittleBar(),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: CustomSearchBar(
+                                        onChanged: (val) {
+                                          ref
+                                              .read(bookmarkQueryProvider
+                                                  .notifier)
+                                              .state = val ?? " ";
+                                        },
+                                        tittle: 'Search saved recipes')),
+                                // const SizedBox(
+                                //   width: 10,
+                                // ),
+                                // TextButton(
+                                //     style: TextButton.styleFrom(
+                                //         backgroundColor:
+                                //             Theme.of(context).colorScheme.primary,
+                                //         padding:
+                                //             const EdgeInsets.symmetric(vertical: 13),
+                                //         foregroundColor:
+                                //             Theme.of(context).colorScheme.onPrimary,
+                                //         shape: RoundedRectangleBorder(
+                                //             borderRadius: BorderRadius.circular(4))),
+                                //     onPressed: () {
+                                //       _showFilterDialog(context);
+                                //     },
+                                //     child: const Icon(FluentIcons.filter_28_regular)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                          ],
                         ),
-                      )
+                      ))
                     ],
-                  ),
-                ))
-              ],
-          body: bookmarks.when(data: (data) {
-            if (data.isNotEmpty) {
-              return Builder(
-                builder: (context) => ListView.builder(
-                  itemCount: data.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemBuilder: (context, index) => const BookmarkedRecipe(),
-                ),
-              );
-            } else {
-              return ListView(
-                children: [
-                  AppPromptWidget(
-                    isSvgResource: false,
-                    title: 'No bookmarks',
-                    message: "You have no bookmarks yet explore more recipes.",
-                    onTap: () {
-                      ref.refresh(bookmarksProvider(""));
-                    },
-                  ),
-                ],
-              );
-            }
-          }, error: (e, stack) {
-            return ListView(
-              children: [
-                AppPromptWidget(
-                  title: e.toString(),
-                ),
-              ],
-            );
-          }, loading: () {
-            return Center(
-              child: CircularLoader(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            );
-          })),
-    );
+                body: bookmarks.when(data: (data) {
+                  if (data.isNotEmpty) {
+                    return Builder(
+                      builder: (context) => ListView.builder(
+                        itemCount: data.length,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemBuilder: (context, index) => BookmarkedRecipe(
+                          recipe: data[index],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return ListView(
+                      children: [
+                        AppPromptWidget(
+                          isSvgResource: false,
+                          title: 'No bookmarks',
+                          message:
+                              "You have no bookmarks yet explore more recipes.",
+                          canTryAgain: false,
+                          onTap: () {
+                            ref.invalidate(bookmarksProvider(" "));
+
+                            // context.watchTabsRouter.setActiveIndex(1);
+                          },
+                        ),
+                      ],
+                    );
+                  }
+                }, error: (e, stack) {
+                  return ListView(
+                    children: [
+                      AppPromptWidget(
+                        title: e.toString(),
+                      ),
+                    ],
+                  );
+                }, loading: () {
+                  return Center(
+                    child: CircularLoader(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  );
+                })),
+          )
+        : Center(
+            child: AppPromptWidget(
+              title: "UnAuthenticated",
+              imagePath: "assets/images/pngs/sorry.png",
+              retryText: 'Login',
+              message: "Login to add bookmarks with Easy cook",
+              onTap: () {
+                // StorageHelper.clear();
+                context.router.push(const LoginRoute());
+              },
+            ),
+          );
   }
 }
 

@@ -34,8 +34,8 @@ class _NewRecipeWidgetState extends State<NewRecipeWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
-                    'You have 12 recipes.json that you haven\'t \ntried yet ',
+                  Text(
+                    'You have 12 recipes that you haven\'t \ntried yet ',
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall

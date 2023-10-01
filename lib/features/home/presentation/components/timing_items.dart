@@ -26,14 +26,18 @@ class _TimingItemState extends ConsumerState<TimingItem> {
               ? BorderSide(color: Theme.of(context).colorScheme.primary)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8)),
-      surfaceTintColor: Theme.of(context).colorScheme.secondaryContainer,
+      surfaceTintColor: Theme.of(context).colorScheme.background,
       color: Theme.of(context).colorScheme.background,
-      elevation: 2,
+      // shadowColor: Theme.of(context).colorScheme.background,
+      elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Row(
           children: [
-            const Icon(FluentIcons.food_24_regular),
+            Icon(
+              FluentIcons.food_24_regular,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             const SizedBox(
               width: 16,
             ),
@@ -46,7 +50,7 @@ class _TimingItemState extends ConsumerState<TimingItem> {
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                        ?.copyWith(fontWeight: FontWeight.w600,fontSize: 14),
                   ),
                   Text(
                     '${Duration(
