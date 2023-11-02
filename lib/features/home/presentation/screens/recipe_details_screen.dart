@@ -5,7 +5,6 @@ import 'package:easy_cook/common/widgets/stacked_images_widget.dart';
 import 'package:easy_cook/core/navigation/app_router.gr.dart';
 import 'package:easy_cook/features/home/data/models/recipe_model.dart';
 import 'package:easy_cook/features/home/presentation/components/ingredients_item.dart';
-import 'package:easy_cook/features/home/presentation/components/review_item.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -132,7 +131,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                                               height: 3,
                                             ),
                                             Text(
-                                              'Renata Moeloeke',
+                                              'Easy cook',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium
@@ -144,17 +143,17 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                                           ],
                                         ),
                                       ),
-                                      TextButton(
-                                          style: TextButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  color: Colors.white),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16),
-                                              shape: const StadiumBorder()),
-                                          onPressed: () {},
-                                          child: const Text('Follow'))
+                                      // TextButton(
+                                      //     style: TextButton.styleFrom(
+                                      //         foregroundColor: Colors.white,
+                                      //         side: const BorderSide(
+                                      //             color: Colors.white),
+                                      //         padding:
+                                      //             const EdgeInsets.symmetric(
+                                      //                 horizontal: 16),
+                                      //         shape: const StadiumBorder()),
+                                      //     onPressed: () {},
+                                      //     child: const Text('Follow'))
                                     ],
                                   ),
                                 ),
@@ -269,29 +268,29 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                   height: 16,
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '👏 Reviews',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 16,
-                ),
-              ),
-              SliverList.builder(
-                itemBuilder: (context, index) => const Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: ReviewItem(),
-                ),
-              )
+              // SliverToBoxAdapter(
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Text(
+              //       '👏 Reviews',
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .titleLarge
+              //           ?.copyWith(fontWeight: FontWeight.w600),
+              //     ),
+              //   ),
+              // ),
+              // const SliverToBoxAdapter(
+              //   child: SizedBox(
+              //     height: 16,
+              //   ),
+              // ),
+              // SliverList.builder(
+              //   itemBuilder: (context, index) => const Padding(
+              //     padding: EdgeInsets.all(5.0),
+              //     child: ReviewItem(),
+              //   ),
+              // )
             ]),
       ),
     );

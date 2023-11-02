@@ -17,10 +17,9 @@ class IsLoggedInNotifier extends StateNotifier<bool> {
   void _listenToAuthChanges() {
     sub = FirebaseAuth.instance.authStateChanges().listen((event) async {
       log('AUTHSTATE CHANGED');
-      var isLoggedIn =
-          await StorageHelper.getBoolean(StorageKeys.stayLoggedIn, false);
+      // var isLoggedIn = await StorageHelper.getBoolean(StorageKeys.stayLoggedIn, false);
 
-      _isLoggedIn = isLoggedIn && (event != null);
+      _isLoggedIn =  (event != null);
 
       state = _isLoggedIn;
 

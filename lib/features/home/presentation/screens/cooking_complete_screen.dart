@@ -1,6 +1,6 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_cook/common/widgets/custom_button.dart';
-import 'package:easy_cook/common/widgets/custom_outlined_button.dart';
 import 'package:easy_cook/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -61,17 +61,20 @@ class _CookingCompleteScreenState extends State<CookingCompleteScreen> {
               child: CustomButton(
                   padding: const EdgeInsets.all(18.0),
                   child: const Text('Continue'),
-                  onPressed: () {}),
+                  onPressed: () {
+
+                    context.router.popUntilRoot();
+                  }),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CustomOutlinedButton(
-                  padding: const EdgeInsets.all(18.0),
-                  outlinedColr: Theme.of(context).colorScheme.primary,
-                  foreGroundColor: Theme.of(context).colorScheme.primary,
-                  onPressed: () {},
-                  child: const Text('Make a Review')),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(10.0),
+            //   child: CustomOutlinedButton(
+            //       padding: const EdgeInsets.all(18.0),
+            //       outlinedColr: Theme.of(context).colorScheme.primary,
+            //       foreGroundColor: Theme.of(context).colorScheme.primary,
+            //       onPressed: () {},
+            //       child: const Text('Make a Review')),
+            // ),
           ],
         ),
       ),
