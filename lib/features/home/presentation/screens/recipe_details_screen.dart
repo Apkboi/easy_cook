@@ -269,7 +269,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                   height: 16,
                 ),
               ),
-             SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
